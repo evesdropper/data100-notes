@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{n}{max\PYGZus{}j} \PYG{o}{=} \PYG{n+nb}{max}\PYG{p}{(}\PYG{n}{babynames}\PYG{o}{.}\PYG{n}{query}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Name == \PYGZsq{}Jennifer\PYGZsq{} and Sex == \PYGZsq{}F\PYGZsq{}\PYGZdq{}}\PYG{p}{)[}\PYG{l+s+s2}{\PYGZdq{}Count\PYGZdq{}}\PYG{p}{])} \PYG{c+c1}{\PYGZsh{} max on the count series based on the query (females born named Jennifer)}
+\PYG{n}{cur\PYGZus{}j} \PYG{o}{=} \PYG{n}{babynames}\PYG{o}{.}\PYG{n}{query}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Name == \PYGZsq{}Jennifer\PYGZsq{} and Sex == \PYGZsq{}F\PYGZsq{}\PYGZdq{}}\PYG{p}{)[}\PYG{l+s+s2}{\PYGZdq{}Count\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{c+c1}{\PYGZsh{} same query, select count series, choose the last row}
+\PYG{n}{rtp} \PYG{o}{=} \PYG{n}{cur\PYGZus{}j} \PYG{o}{/} \PYG{n}{max\PYGZus{}j} \PYG{c+c1}{\PYGZsh{} find the rtp \PYGZhy{} current vs max}
+
+\PYG{c+c1}{\PYGZsh{} simplifying}
+\PYG{k}{def} \PYG{n+nf}{ratio\PYGZus{}to\PYGZus{}peak}\PYG{p}{(}\PYG{n}{series}\PYG{p}{):}
+    \PYG{k}{return} \PYG{n}{series}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{/} \PYG{n+nb}{max}\PYG{p}{(}\PYG{n}{series}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} current / max}
+
+\PYG{n}{j\PYGZus{}counts} \PYG{o}{=} \PYG{n}{babynames}\PYG{o}{.}\PYG{n}{query}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Name == Jennifer and Sex == \PYGZsq{}F\PYGZsq{}\PYGZdq{}}\PYG{p}{)[}\PYG{l+s+s2}{\PYGZdq{}Count\PYGZdq{}}\PYG{p}{]}
+\PYG{n}{ratio\PYGZus{}to\PYGZus{}peak}\PYG{p}{(}\PYG{n}{j\PYGZus{}counts}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} returns the same results as the rtp variable}
+\end{Verbatim}

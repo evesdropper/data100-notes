@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+elections.loc[[elections[\PYGZsq{}\PYGZpc{}\PYGZsq{}] \PYGZgt{} 50, [\PYGZdq{}Candidate\PYGZdq{}, \PYGZdq{}Year\PYGZdq{}]].head(3)
+\end{Verbatim}

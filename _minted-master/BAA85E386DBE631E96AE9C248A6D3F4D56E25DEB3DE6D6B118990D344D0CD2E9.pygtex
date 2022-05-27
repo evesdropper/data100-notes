@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{\PYGZsh{} creating a new column}
+\PYG{n}{babynames}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}name\PYGZus{}lengths\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{babynames}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Name\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{str}\PYG{o}{.}\PYG{n}{len}\PYG{p}{()} \PYG{c+c1}{\PYGZsh{} new series \PYGZhy{} applies len to the Name series, then assigns the series \PYGZdq{}name\PYGZus{}lengths\PYGZdq{} to the dataframe as a column}
+\PYG{n}{babynames} \PYG{o}{=} \PYG{n}{babynames}\PYG{o}{.}\PYG{n}{sort}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}name\PYGZus{}lengths\PYGZdq{}}\PYG{p}{,} \PYG{n}{ascending}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} sort by name\PYGZus{}length columns in descending order}
+\PYG{n}{babynames} \PYG{o}{=} \PYG{n}{babynames}\PYG{o}{.}\PYG{n}{drop}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}name\PYGZus{}lengths\PYGZdq{}}\PYG{p}{,} \PYG{n}{axis}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}columns\PYGZdq{}}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} drop the column \PYGZhy{} add axis = \PYGZdq{}columns\PYGZdq{} to specify it is a column (default drop rows)}
+\end{Verbatim}

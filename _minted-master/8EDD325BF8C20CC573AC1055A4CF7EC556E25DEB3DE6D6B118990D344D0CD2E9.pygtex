@@ -1,0 +1,18 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{\PYGZsh{} original, verbose code}
+\PYG{n}{elections}\PYG{p}{[(}\PYG{n}{elections}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Party\PYGZdq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}Anti\PYGZhy{}Masonic\PYGZdq{}}\PYG{p}{)}  \PYG{o}{|}
+          \PYG{p}{(}\PYG{n}{elections}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Party\PYGZdq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}American\PYGZdq{}}\PYG{p}{)}      \PYG{o}{|}
+          \PYG{p}{(}\PYG{n}{elections}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Party\PYGZdq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}Anti\PYGZhy{}Monopoly\PYGZdq{}}\PYG{p}{)} \PYG{o}{|}
+          \PYG{p}{(}\PYG{n}{elections}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Party\PYGZdq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}American Independent\PYGZdq{}}\PYG{p}{)]}
+
+\PYG{c+c1}{\PYGZsh{} .isin}
+\PYG{n}{a\PYGZus{}parties} \PYG{o}{=} \PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Anti\PYGZhy{}Masonic\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}American\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Anti\PYGZhy{}Monopoly\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}American Independent\PYGZdq{}}\PYG{p}{]}
+\PYG{n}{elections}\PYG{p}{[}\PYG{n}{elections}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Party\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{isin}\PYG{p}{(}\PYG{n}{a\PYGZus{}parties}\PYG{p}{)]}
+\PYG{c+c1}{\PYGZsh{} .str.startswith}
+\PYG{n}{elections}\PYG{p}{[}\PYG{n}{elections}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Party\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{str}\PYG{o}{.}\PYG{n}{startswith}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}A\PYGZdq{}}\PYG{p}{)]}
+\PYG{c+c1}{\PYGZsh{} query \PYGZhy{} select rows of elections after 2000 and the result is a win}
+\PYG{n}{elections}\PYG{o}{.}\PYG{n}{query}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Year \PYGZgt{}= 2000 and Result == \PYGZdq{}win\PYGZdq{}\PYGZsq{}}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} query with @}
+\PYG{n}{parties} \PYG{o}{=} \PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Republican\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Democratic\PYGZdq{}}\PYG{p}{]}
+\PYG{n}{elections}\PYG{o}{.}\PYG{n}{query}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Result == \PYGZdq{}win\PYGZdq{} and Party not in @parties\PYGZsq{}}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} select winners that don\PYGZsq{}t belong to republican/democratic parties}
+\end{Verbatim}

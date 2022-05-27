@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{\PYGZsh{}build dictionary where each entry is the rtp for a given name, e.g. rtps[\PYGZdq{}jennifer\PYGZdq{}] should be 0.0231}
+\PYG{n}{rtps} \PYG{o}{=} \PYG{p}{\PYGZob{}\PYGZcb{}}
+\PYG{k}{for} \PYG{n}{name} \PYG{o+ow}{in} \PYG{n}{babynames}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Name\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{unique}\PYG{p}{():} \PYG{c+c1}{\PYGZsh{} use Series.unique to get an array of unique values in a series}
+    \PYG{n}{counts\PYGZus{}of\PYGZus{}current\PYGZus{}name} \PYG{o}{=} \PYG{n}{female\PYGZus{}babynames}\PYG{p}{[}\PYG{n}{female\PYGZus{}babynames}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Name\PYGZdq{}}\PYG{p}{]} \PYG{o}{==} \PYG{n}{name}\PYG{p}{][}\PYG{l+s+s2}{\PYGZdq{}Count\PYGZdq{}}\PYG{p}{]} \PYG{c+c1}{\PYGZsh{} choose the rows corresponding to the correct name}
+    \PYG{n}{rtps}\PYG{p}{[}\PYG{n}{name}\PYG{p}{]} \PYG{o}{=} \PYG{n}{ratio\PYGZus{}to\PYGZus{}peak}\PYG{p}{(}\PYG{n}{counts\PYGZus{}of\PYGZus{}current\PYGZus{}name}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}convert to series}
+\PYG{n}{rtps} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{(}\PYG{n}{rtps}\PYG{p}{)}
+\end{Verbatim}

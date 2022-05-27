@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{n+nb}{type}\PYG{p}{(}\PYG{n}{elections}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} DataFrame}
+\PYG{n+nb}{type}\PYG{p}{(}\PYG{n}{elections}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Candidate\PYGZdq{}}\PYG{p}{])} \PYG{c+c1}{\PYGZsh{} Series}
+\end{Verbatim}

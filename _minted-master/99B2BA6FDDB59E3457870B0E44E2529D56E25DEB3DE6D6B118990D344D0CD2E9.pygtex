@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{n}{elections}\PYG{p}{[}\PYG{n}{elections}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Party\PYGZdq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}Independent\PYGZdq{}}\PYG{p}{]} \PYG{c+c1}{\PYGZsh{} checks the Party series for each entry, keeps the entries which the party is independent}
+
+\PYG{n}{elections}\PYG{p}{[(}\PYG{n}{elections}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Result\PYGZdq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}win\PYGZdq{}}\PYG{p}{)} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{n}{elections}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}\PYGZpc{}\PYGZdq{}}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{47}\PYG{p}{)]} \PYG{c+c1}{\PYGZsh{} checks if the election result is a win and if the winning percent is less than 47\PYGZpc{}}
+\end{Verbatim}

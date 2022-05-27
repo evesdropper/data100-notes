@@ -1,0 +1,37 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{varwidth}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage[mode=buildnew]{standalone}
+\graphicspath{{figures/}}
+\usepackage[lecture]{random}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textsc{Evelyn Koo}}
+\chead{\textsc{Notes (Sp22)}}
+\lhead{Data 100}
+\cfoot{\thepage}
+
+\begin{document}
+\title{Data 100 Notes}
+\author{Evelyn Koo}
+\date{Summer 2022}
+\maketitle
+\tableofcontents
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+Notes for Data 100, taken using Vim and \LaTeX.
+\subsection*{Remarks}
+Notes are taken from the slides of the Spring 2022 edition of Data 100.
+
+Some of the figures may be messy or poorly drawn as this is my first time seriously learning TikZ.
+
+\input{1-overview.tex}
+\input{2-sampling.tex}
+\input{3-pandas1.tex}
+\input{4-pandas2.tex}
+
+\end{document}

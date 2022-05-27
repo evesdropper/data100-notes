@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{def} \PYG{n+nf}{dr\PYGZus{}ea\PYGZus{}count}\PYG{p}{(}\PYG{n}{string}\PYG{p}{):}
+    \PYG{k}{return} \PYG{n}{string}\PYG{o}{.}\PYG{n}{count}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}dr\PYGZdq{}}\PYG{p}{)} \PYG{o}{+} \PYG{n}{string}\PYG{o}{.}\PYG{n}{count}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ea\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n}{babynames}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}dr\PYGZus{}ea\PYGZus{}count\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{babynames}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Name\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{map}\PYG{p}{(}\PYG{n}{dr\PYGZus{}ea\PYGZus{}count}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} Series.map(\PYGZlt{}func\PYGZgt{})}
+\PYG{n}{babynames}\PYG{o}{.}\PYG{n}{sort\PYGZus{}values}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}dr\PYGZus{}ea\PYGZus{}count\PYGZdq{}}\PYG{p}{,} \PYG{n}{ascending}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+\end{Verbatim}
