@@ -25,6 +25,8 @@
 \contentsline {subsection}{\numberline {4.1}Adding, Modifying, and Removing Columns}{17}{subsection.4.1}%
 \contentsline {subsubsection}{\numberline {4.1.1}Sorting by Arbitrary Functions}{18}{subsubsection.4.1.1}%
 \contentsline {subsection}{\numberline {4.2}Group By}{18}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Pivot Tables}{20}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Joining Tables}{20}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.2.1}Quick Look at EDA}{21}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Other groupby Features}{22}{subsubsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.3}Pivot Tables}{22}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Joining Tables: An Overview}{23}{subsection.4.4}%
 \contentsfinish 

@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+df.rename(columns= \PYGZbs{}\PYGZob{}\PYGZlt{}old colname1\PYGZgt{}: \PYGZlt{}new colname1\PYGZgt{}, ..., \PYGZlt{}old\PYGZhy{}colnameN\PYGZgt{}: \PYGZlt{}new\PYGZhy{}colnameN\PYGZgt{} \PYGZbs{}\PYGZcb{})
+\end{Verbatim}

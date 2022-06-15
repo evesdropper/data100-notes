@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+df.merge(left=\PYGZlt{}table1\PYGZgt{}, right=\PYGZlt{}table2\PYGZgt{}, left\PYGZus{}on=\PYGZlt{}col1\PYGZgt{}, right\PYGZus{}on=\PYGZlt{}col2\PYGZgt{})
+\end{Verbatim}

@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+df.pivot\PYGZus{}table(index=\PYGZlt{}col1\PYGZgt{}, columns=\PYGZlt{}col2\PYGZgt{}, values=[\PYGZlt{}val\PYGZhy{}cols\PYGZgt{}], aggfunc=\PYGZlt{}group\PYGZhy{}op\PYGZgt{})
+\end{Verbatim}

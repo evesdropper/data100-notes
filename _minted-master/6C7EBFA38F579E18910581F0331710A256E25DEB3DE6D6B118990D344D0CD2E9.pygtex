@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{\PYGZsh{} creating tables \PYGZhy{} table containing baby names and candidate names}
+\PYG{n}{male\PYGZus{}2020\PYGZus{}babynames} \PYG{o}{=} \PYG{n}{babynames}\PYG{o}{.}\PYG{n}{query}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Sex == \PYGZdq{}M\PYGZdq{} and Year == 2020\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{elections}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}First Name\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{elections}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Candidate\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{str}\PYG{o}{.}\PYG{n}{split}\PYG{p}{()}\PYG{o}{.}\PYG{n}{str}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+\PYG{n}{merged} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{merge}\PYG{p}{(}\PYG{n}{left} \PYG{o}{=} \PYG{n}{elections}\PYG{p}{,} \PYG{n}{right} \PYG{o}{=} \PYG{n}{male\PYGZus{}2020\PYGZus{}babynames}\PYG{p}{,} \PYG{n}{left\PYGZus{}on} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}First Name\PYGZdq{}}\PYG{p}{,} \PYG{n}{right\PYGZus{}on} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}Name\PYGZdq{}}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} merge the two tables, left\PYGZus{}on/right\PYGZus{}on is the common column}
+\end{Verbatim}

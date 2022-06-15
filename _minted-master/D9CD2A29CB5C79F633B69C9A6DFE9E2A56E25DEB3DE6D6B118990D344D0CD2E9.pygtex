@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{n}{female\PYGZus{}babynames}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Name\PYGZdq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{agg}\PYG{p}{(}\PYG{n}{ratio\PYGZus{}to\PYGZus{}peak}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} without dropping cols}
+\PYG{n}{female\PYGZus{}babynames}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Name\PYGZdq{}}\PYG{p}{)[[}\PYG{l+s+s2}{\PYGZdq{}Count\PYGZdq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{agg}\PYG{p}{(}\PYG{n}{ratio\PYGZus{}to\PYGZus{}peak}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} select Count column}
+\end{Verbatim}
