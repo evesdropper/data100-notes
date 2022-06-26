@@ -1,0 +1,227 @@
+\lecture[2022-06-15]{Data Wrangling, Exploratory Data Analysis}
+
+Previously, we worked with Pandas. Now, we have our data - what do we do with it next? Work to understand the data. This is split into processing and visualizing/reporting data. 
+
+\subsection{Data Wrangling and EDA: An Infinite Loop}
+[Infinite Loop of Data Science - insert graphic]
+
+\begin{definition}[Data Wrangling]{Process of transforming raw data to facilitate subsequent analysis.
+
+Often addresses issues such as the following:
+\begin{itemize}
+\item Structure/formatting
+\item Missing/corrupted values
+\item Unit conversion
+\item Encoding text as numbers
+\end{itemize}
+
+Data cleaning is a big part of data science.
+}
+\end{definition}
+
+\begin{definition}[Exploratory Data Analysis]{``Getting to know the data'', or the process of transforming, visualizing, and summarizing data to achieve the following:
+\begin{itemize}
+\item Build/confirm understanding of the data and its provenance (origin of data/methodology by which the data was produced).
+\item Identify/address potential issues in data.
+\item Inform the subsequent analysis.
+\item Discover potential hypotheses (be careful).
+\end{itemize}
+
+EDA is open-ended analysis; be willing to find something surprising.
+}
+\end{definition}
+
+John Tukey, mathematician and statistician from Princeton, who came up with Exploratory Data Analysis (as well as the idea of a bit and FFT), states that EDA is like detective work: ``Exploratory data analysis is an attitude, a state of flexibility, a willingness to look for those things that we believe are not there, as well as those that we believe to be there.''
+
+\subsection{Key Properties to Consider in EDA}
+What should we look for in EDA? 
+\begin{itemize}
+\item \textbf{Structure:} ``shape'' of a data file.
+\item \textbf{Granularity:} how fine/coarse each datum is.
+\item \textbf{Scope:} how (in)complete the data is.
+\item \textbf{Temporality:} How the data is situated in time.
+\item \textbf{Faithfulness:} How well the data captures ``reality''.
+\end{itemize}
+
+\subsubsection{Structure}
+Structure deals with the ``shape'' of a data file. Some major factors are: file format, file type, and multiple files (primary/foreign keys).
+
+\textbf{File Format}
+
+We prefer rectangular data for data analysis:
+\begin{itemize}
+\item Regular structure makes it easy to manipulate and analyze.
+\item A big part of data cleaning is to make data more rectangular.
+\end{itemize}
+(add records/rows and fields/columns tikz graphic)
+
+Two types of rectangular data are tables and matrices:
+\begin{itemize}
+\item \textbf{Tables:} (e.g. dataframes in Python, SQL relations) named columns with different types, manipulated with data transformation languages (map, filter, group by, join).
+\item \textbf{Matrices:} Numeric data of the same type (float, int, etc.), manipulated with linear algebra.
+\end{itemize}
+These are usually formatted with TSV (tab separated values), CSV (comma separated values), or JSON.
+
+\begin{example}[]{Suppose we are given a CSV of SF restaurant food safety scores. How do we understand the data structure?
+\tcbline
+Look for the size and format of the data file, and then look to find out how to read the data file into pandas. In the case of a CSV:
+\begin{itemize}
+\item Rows are delimited by a new line (\mintinline{text}{\n}).
+\item Columns are delimited by commas (\mintinline{text}{,}).
+\end{itemize}
+We can then use \mintinline{text}{pd.read_csv}.
+}
+\end{example}
+
+\begin{example}[Reading a TSV vs. CSV]{Now suppose the data was in a TSV? How can we read it, and what are the downsides of CSV/TSV data?
+\tcbline 
+This time, instead of columns being delimited by commas, they are delimited by tabs (\mintinline{text}{\t}). Therefore, add the argument \mintinline{text}{delimiter="\t"} into the \mintinline{text}{pd.read_csv} function to read a TSV.
+
+However, since these are marked by certain delimiters, having said delimiters in the data can cause issues (e.g. commas in data entries in a CSV, tabs in a TSV).
+}
+\end{example}
+
+\begin{example}[]{Suppose we are given another dataset, which is a JSON of Berkeley covid cases by day. How can we understand the data's structure?
+\tcbline
+JSON is a less common format:
+\begin{itemize}
+\item Similar to Python dictionaries.
+\item Has strict formatting around quoting, which resolves issues in CSV/TSV.
+\item Saves metadata (data about data) along with records in the same file.
+\item However, it is not rectangular, and each record can have different fields. 
+\item Additionally, nesting means records can contain tables, making things more complicated.
+\end{itemize}
+To sort out tabular data, find records using Python, and then use \mintinline{text}{pd.DataFrame} function.
+}
+\end{example}
+
+\begin{example}[Mauna Loa Example]{The Mauna Loa data is presented in CSVs. Which function do we use to load the data into Pandas?
+\tcbline 
+Since it is a CSV, we can use \mintinline{text}{pd.read_csv}.
+}
+\end{example}
+
+\begin{notebox}[]
+Files may have mixed file formats, incorrect/missing extensions. This means you may need to explore the raw data file.
+\end{notebox}
+
+While in Data 100, we work primarily with CSV files, there are also other types of non-tabular data files elsewhere.
+\begin{itemize}
+\item \textbf{XML (Extensible Markup Language):} contains a nested structure, sort of like HTML.
+\item \textbf{Log Data:} Usually in txt and logs actions. Usually does not have a certain format, so you may need to make your own custom parser.
+\end{itemize}
+
+\textbf{Variable Type}
+
+All data, regardless of format, is composed of records. Each record has a set of variables/fields. (For tabular data, records are rows, fields are columns; for non-tabular data, create records and wrangle into fields)
+
+Variables are defined by the following:
+\begin{itemize}
+    \item \textbf{Storage Type:} how they are stored in pandas (e.g. int, float, boolean, object, etc). Can be found with \mintinline{text}{df[colname].dtype}.
+\item \textbf{Feature Type:} conceptual notion of the information; uses expert knowledge and requires exploration of the data and possibly consulting the data codebook (if it exists).
+\end{itemize}
+
+(Insert variable feature types figure)
+
+Var -> quantitative / qualitative -> discrete/continuous -> ordinal/nomial
+
+\begin{example}[]{What is the feature type for each variable?
+\tcbline
+\begin{center}
+\begin{tabular}{@{}ccc@{}}
+\toprule
+     & Variable & Feature Type \\
+\midrule
+    1 & CO2 Level (PPM) & Continuous \\
+    2 & No. of Siblings & Discrete \\
+    3 & GPA & Continuous \\
+    4 & Income Bracket (low/med/high) & Ordinal \\
+    5 & Race & Nominal \\
+    6 & \# Years of Education & Discrete \\
+    7 & Yelp Rating & Ordinal \\
+\bottomrule
+\end{tabular}
+\end{center}
+For Yelp rating, while it seems like it could be quantitative, it should be qualitative as it is usually presented with histograms (like qualitative data).
+}
+\end{example}
+
+\textbf{Multiple Files (Primary and Foreign Keys)}
+
+Sometimes, data comes in multiple files, and data will reference other data.
+
+\begin{definition}[Primary Key]{Column/set of columns in a table that determine the values of the remaining values.
+
+Primary keys are unique. Some examples of primary keys are SSNs, IDs.
+}
+\end{definition}
+
+\begin{definition}[Foreign Keys]{Columns/sets of columns that reference primary keys in other tables.
+
+May need to join tables with \mintinline{text}{pd.merge}.
+}
+\end{definition}
+
+\subsubsection{Granularity, Scope, Temporality}
+
+\textbf{Granularity}
+\begin{itemize}
+\item What does each record represent? (e.g. purchase, person, group of users)
+\item Do all records capture granularity at the same level? (e.g. some data will include summaries/rollups as records)
+\item If the data are coarse, how are the records aggregated? (e.g. sampling, averaging)
+\end{itemize}
+
+\textbf{Scope}
+\begin{itemize}
+\item Does my data cover my area of interest? (e.g. interested in studying crime in CA, but only have Berkeley data)
+\item Are my data too expansive? (e.g. interested in DS100 student grades, but have grades for entire stats dept classes; if the data is a sample, the filtered data could have poor coverage)
+\item Does my data cover the right time frame? (see Temporality)
+\item Recall: sampling frame is the population from which data were sampled; however, it may not be the population of interest. Want to know: how (in)complete is the frame and its data? (How is it situated in place/how well does the frame or data capture reality/how is the frame or data situated in time?)
+\end{itemize}
+
+\textbf{Temporality}
+\begin{itemize}
+\item \textbf{Data Changes:} When was the data collected/last updated?
+\item \textbf{Periodicity:} Are there patterns (e.g. diurnal/24h patterns)?
+\item Meaning of date/time fields? (e.g. when the event happened, when the data was collected/entered into the system, when the data was copied into a database)
+\end{itemize}
+Time also depends on time zones/daylight sayings (use Python \mintinline{text}{datetime} and Pandas \mintinline{text}{dt}). Another point to consider is different string representations of dates (varies by region).
+
+There may also be some null values. Time is often measured in seconds since Jan 1, 1970, following UTC time.
+
+\subsubsection{Faithfulness and Missing Values}
+
+\textbf{Faithfulness:} Do I trust this data?
+\begin{itemize}
+\item Does my data contain unrealistic or ``incorrect'' values? (e.g. dates in the future for past events, nonexistent locations, negative counts, misspellings, large outliers)
+\item Does my data violate obvious dependencies? (e.g. age and birthday don't match)
+\item Was the data entered by hand? (e.g. spelling errors, fields shifted, did the form require all fields or provide default values)
+\item Obvious signs of data falsification? (e.g. repeated names, fake looking emails, repeated use of uncommon names/fields)
+\end{itemize}
+
+\textbf{Common Problems and Solutions}
+\begin{itemize}
+\item \textbf{Truncated Data:} e.g. early Microsoft Excel limits (65536 rows, 255 cols). Solution: be aware of consequences in analysis (e.g. how did truncation affect the sample?)
+\item \textbf{Timezone Inconsistencies:} convert to common timezone (e.g. UTC, timezone of the location for modeling behavior).
+\item \textbf{Duplicated Records/Samples:} identify/eliminate using primary key, understand implications on sample.
+\item \textbf{Spelling Errors:} Apply corrections/drop records not in dictionary, understand implications on sample.
+\item \textbf{Inconsistent/Unspecified Units:} Infer units, check that the values are in reasonable ranges for data.
+\end{itemize}
+
+\textbf{Missing Data}
+
+Addressing missing data/default values:
+\begin{itemize}
+\item \textbf{Drop:} drop records with missing values. Most common approach. Check for biases induced by dropped values; missing/corrupt values may be related to something of interest.
+\item \textbf{Inputation:} Inferring missing values.
+\begin{itemize}
+    \item \textbf{Average Imputation:} replace with average value (usually closest related subgroup mean).
+\item \textbf{Hot Deck Imputation:} replace with random value (random value from closest related subgroup mean).
+\end{itemize}
+\item Drop missing values, but check for induced bias using domain knowledge.
+\item Directly model missing values using future analysis.
+\end{itemize}
+
+\subsection{EDA Demo: Mauna Loa CO2}
+
+
