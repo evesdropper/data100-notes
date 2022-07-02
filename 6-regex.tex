@@ -1,3 +1,273 @@
 \lecture[2022-06-25]{Regular Expressions}
 
+Previously, in Mauna Loa example, we worked with numeric data that had missing values. There were 3 options:
+\begin{itemize}
+\item Drop missing records.
+\item Use NaN (not a number) for missing values.
+\item Impute missing values with the interpolated \mintinline{text}{Int} column.
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{6-impute.png}
+\end{center}
+
+With numerical data, you do data wrangling with EDA, but with text data, wrangling is upfront and requires Python string manipulation and Regex.
+
+\textbf{Why work with text?}
+\begin{enumerate}
+    \item \textbf{Canonicalization:} Convert data that has more than one possible presentation into a standard form (e.g. join tables with mismatched labels)
+\item \textbf{Extract} information into a new feature (e.g. extract dates and times from log files).
+\end{enumerate}
+
+\subsection{Python String Methods}
+A possible way we can work with text data is with Python string methods to parse/split/replace strings. Here are a few examples.
+\begin{example}[Canonicalization]{How do we make all the county names standardized (lower case, no spaces, remove punctuation, etc.)?
+\begin{center}
+\includegraphics[width=0.5\textwidth]{6-canonic.png}
+\end{center}
+\tcbline 
+\begin{minted}{python}
+def canonicalize_county(county_name):
+    return (county_name
+    .lower() # lowercase
+    .replace(' ', '')
+    .replace('&', 'and') # remove spaces/dots, change & to and
+    .replace('.', '')
+    .replace('county', '')
+    .replace('parish', '') # remove county/parish
+    )
+\end{minted}
+}
+\end{example}
+
+\begin{example}[Extraction]{How do we extract specific days, etc. from a log file date?
+\begin{center}
+\includegraphics[width=0.5\textwidth]{6-extract.png}
+\end{center}
+\tcbline 
+\begin{minted}{python}
+pertinent = line.split("[")[1].split(']')[0] # get the date within brackets - get after the opening bracket and split off anything after closing bracket
+day, month, rest = pertinent.split('/') # split by /
+year, hour, minute, rest = rest.split(':') # split YYYY:HH:MM
+seconds, time_zone = rest.split(' ') # split the rest
+\end{minted}
+}
+\end{example}
+
+\textbf{String Methods Reference}
+\begin{center}
+\begin{tabular}{@{}ccc@{}}
+\toprule
+    Operation & Python & Pandas Series \\
+\midrule
+    Transformation & \mintinline{text}{s.lower()/s.upper()} & \mintinline{text}{ser.str.lower()/ser.str.upper()} \\
+    Replacement/Deletion & \mintinline{text}{s.replace(<find>, <repl=''>)} & \mintinline{text}{ser.str.replace(<find>, <repl=''>)} \\
+    Split & \mintinline{text}{s.split(<keyword>)} & \mintinline{text}{ser.str.split(<keyword>)} \\
+    Substring & \mintinline{text}{s[1:4]} & \mintinline{text}{ser.str[1:4]} \\
+    Membership & \mintinline{text}{'ab' in s} & \mintinline{text}{ser.str.contains('ab')} \\
+    Length & \mintinline{text}{len(s)} & \mintinline{text}{ser.str.len()} \\
+\bottomrule
+\end{tabular}
+
+\end{center}
+
+However, Python string functions are very brittle - it requires maintenance if the data changes, and it is also not as flexible (e.g. finding all the \mintinline{text}{moo+n} patterns in a string would be difficult). This often makes the extraction and canonicalization functions very ``hacky'' and messy.
+
+An alternative is to use Regex, or regular expressions with the Python \mintinline{text}{re} library and the pandas \mintinline{text}{str} accessor.
+
+\begin{example}[Extraction, Revisited]{How can we change the code from the log file to a regular expression?
+\tcbline 
+\begin{minted}{python}
+import re
+pattern = r'\[(\d+)\/(\w+)\/(\d+):(\d+):(\d+):(\d+) (.+)\]'
+day, month, year, hour, minute, seconds, time_zone = re.findall(pattern, line)[0]
+\end{minted}
+}
+\end{example}
+
+\subsection{Regex}
+\begin{definition}[Formal Language]{Set of strings, typically described implicitly. (e.g. set of all strings with \mintinline{text}{len(s) < 10} with the phrase \mintinline{text}{'data'})
+}
+\end{definition}
+\begin{definition}[Regular Language]{Formal language that can be described by a regular expression.
+}
+\end{definition}
+\begin{definition}[Regular Expression]{Sequence of characters that specifies a search pattern.
+
+e.g. to describe SSNs, we can use the following sequence: \mintinline{text}{[0-9]\{3\}-[0-9]\{2\}[0-9]\{4\}} (3 of any digit, dash, 2 digits, dash, 4 digits)
+}
+\end{definition}
+
+\textbf{Basic Regex Syntax}
+
+The four basic operators for Regex - you can do anything with these 4 operations.
+\begin{center}
+\begin{tabular}{@{}ccccc@{}}
+\toprule
+    Operation & Order & Example & Matches & Doesn't Match \\
+\midrule
+    Concatenation & 3 & \mintinline{text}{AABAAB} & \mintinline{text}{AABAAB} & every other string \\
+    Or & 4 & \mintinline{text}{AA|BAAB} & either \mintinline{text}{AA, BAAB} & every other string \\
+    Closure (zero or more) & 2 & \mintinline{text}{AB*A} & \mintinline{text}{AA, ABBBBBBA} & \mintinline{text}{AB, ABABA} \\
+    Group (parentheses) & 1 & \mintinline{text}{A(A|B)AAB, (AB)*A} & \mintinline{text}{A, ABABABABA} & \mintinline{text}{AA, ABBA} \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{notebox}[]
+Note that \mintinline{text}{|, *, ()} are metacharacters, only manipulating adjacent characters.
+
+e.g. \mintinline{text}{AB*} means one A, then 0 or more Bs, while \mintinline{text}{(AB)*} means 0 or more sets of AB
+\end{notebox}
+\begin{example}[]{Find a regular expression that matches ``moon'', ``moooon'' and so on (nonzero even \# of o).
+\tcbline 
+\begin{minted}{python}
+pattern = r"moo(oo)*n"
+\end{minted}
+\tcbline
+Follow up: find a regular expression that matches any nonzero even number of o or u.
+\begin{minted}{python}
+pattern = r"m(oo|uu)(oo|uu)*n"
+\end{minted}
+}
+\end{example}
+
+\textbf{Expanded Regex Syntax}
+\begin{center}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+    Operation & Example & Matches & Doesn't Match \\
+\midrule
+    Any character (except \mintinline{text}{\n}) & \mintinline{text}{.U.U.U.} & \mintinline{text}{CUMULUS, JUGULUM} & \mintinline{text}{SUCCUMBUS, TUMULTUOUS} \\
+    Character class & \mintinline{text}{[A-Za-z][a-z]*} & \mintinline{text}{word, Capitalized} & \mintinline{text}{camelCase, 4illegal} \\
+    Repeat \mintinline{text}{a} times & \mintinline{text}{j[aeiou]\{3\}hn} & \mintinline{text}{jaoehn, jooohn} & \mintinline{text}{jhn, jaeiouhn}  \\
+    Repeat \mintinline{text}{\{a, b\}} times & \mintinline{text}{j[ou]\{1,2\}hn} & \mintinline{text}{john, juohn} & \mintinline{text}{jhn, jooohn} \\
+    At least 1 & \mintinline{text}{jo+hn} & \mintinline{text}{john, jooohn} & \mintinline{text}{jhn, jjohn} \\
+    Zero or One & \mintinline{text}{joh?n} & \mintinline{text}{jon, john} & Any other string \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{example}[]{Find a regular expression for the following:
+\begin{enumerate}
+\item Any lowercase string with a repeated vowel (e.g. ``noon'', ``peel'', etc.).
+\item String containing a lowercase letter and a number.
+\end{enumerate}
+\tcbline 
+\begin{minted}{python}
+pattern1 = r"[a-z]*(aa|ee|ii|oo|uu)[a-z]*"
+pattern2 = r"(.*[a-z].*[0-9].*)|(.*[0-9].*[a-z].*)"
+\end{minted}
+}
+\end{example}
+
+\textbf{Convenient Regex Syntax}
+\begin{center}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+    Operation & Example & Matches & Doesn't Match \\
+\midrule
+    Built-in char classes & \mintinline{text}{\w+, \d+, \s+} & \mintinline{text}{Fawef_03, 12312, <whitespace>} & \mintinline{text}{a cup, 423 p, <non-ws>} \\
+    Char class negation (not in char class) & \mintinline{text}{[^a-z]+} & \mintinline{text}{PEPPERS191, 1711!} & \mintinline{text}{porch, Clams} \\
+    Escape Character (char literally) & \mintinline{text}{cow\.com} & \mintinline{text}{cow.com} & \mintinline{text}{cowscom} \\
+\bottomrule
+\end{tabular}
+\end{center}
+Note: \mintinline{text}{\w = [A-Za-z0-9_], \d = [0-9], \s = <whitespace>}.
+
+\begin{example}[Log File, Revisited]{Give a regular expression to match the date portion in the log file.
+\tcbline
+\begin{minted}{python}
+pattern = r"\[.*\]"
+\end{minted}
+}
+\end{example}
+
+\textbf{Additional Regex Features}
+\begin{center}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+    Operation & Example & Matches & Doesn't Match \\
+\midrule
+    Beginning of Line & \mintinline{text}{\^ark} & \mintinline{text}{ark two, ark o ark} & \mintinline{text}{dark} \\
+    End of Line & \mintinline{text}{ark\$} & \mintinline{text}{dark, ark o ark} & \mintinline{text}{ark two} \\
+    Lazy version of 0+/\mintinline{text}{*} & \mintinline{text}{5.*?5} & \mintinline{text}{5005, 55} & \mintinline{text}{500505} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Regex in Python/Pandas}
+
+\textbf{Canonicalization}
+\textbf{Python: }We can use the \mintinline{text}{re.sub} function from the \mintinline{text}{re} module, replacing all instances of \mintinline{text}{pattern} with \mintinline{text}{repl}.
+
+Example: 
+\begin{minted}{python}
+text = "<div><td valign="top">Moo</td></div>"
+pattern = r"<[^>]+>" # html tags
+re.sub(pattern, '', text) # replaces html tags with empty char, returns Moo
+\end{minted}
+
+\textbf{Pandas:} Use \mintinline{text}{ser.str.replace(pattern, repl, regex=True)} to replace all instances of \mintinline{text}{pattern} with \mintinline{text}{repl}.
+
+Example:
+\begin{minted}{python}
+pattern = r"<[^>]+>"
+df["Html"].str.replace(pattern, '', regex=True)
+\end{minted}
+
+\begin{notebox}[Raw Strings]
+Use raw strings \mintinline{text}{r''/r""} as opposed to regular strings when using Regex. Both Regex and Python use backslash \mintinline{text}{\\} to escape characters, so it would lead to much more cluttered and uglier regular expressions (e.g. \mintinline{text}{"\\\\section"} vs \mintinline{text}{r"\\section"})
+\end{notebox}
+
+\textbf{Extraction}
+
+\textbf{Python:} Use \mintinline{text}{re.findall(pattern, text)} to find all instances of a pattern in the text.
+
+Example:
+\begin{minted}{python}
+text = "My social security number is 123-45-6789 bro, or actually maybe it’s 321-45-6789.";
+pattern = r"[0-9]{3}-[0-9]{2}-[0-9]{4}"
+re.findall(pattern, text) # finds all valid numbers that could be SSNs
+\end{minted}
+
+\textbf{Pandas:} \mintinline{text}{ser.str.findall(pattern)} returns a series of lists of valid matches.
+
+Example:
+\begin{minted}{python}
+pattern = r"[0-9]{3}-[0-9]{2}-[0-9]{4}"
+df["SSN"].str.findall(pattern)
+\end{minted}
+
+\textbf{Capture Groups}
+
+Parentheses were used to specify the order of operations at first, but they also thought of as a match/capture group, which are returned as tuples of groups.
+
+Example:
+\begin{minted}{python}
+text = """Observations: 03:04:53 - Horse awakens.
+03:05:14 - Horse goes back to sleep."""
+pattern = "(\d\d):(\d\d):(\d\d) - (.*)"
+matches = re.findall(pattern, text)
+# returns [('03', '04', '53', 'Horse awakens.'), ('03', '05', '14', 'Horse goes back to sleep.')]
+\end{minted}
+
+\begin{notebox}[Findall vs. Extract]
+Another function is \mintinline{text}{ser.str.extract(pattern)} and \mintinline{text}{ser.str.extractall(pattern)} which returns a dataframe of the first match (one group per column) / of all matches, one group per column, one row per match.
+\end{notebox}
+
+\begin{notebox}[Limitations for Regex]
+Writing regex is like writing a program: you need to know the syntax well, can be easier to write than read, and can be difficult to debug.
+
+Regex is also not the best at some problems:
+\begin{itemize}
+\item Parsing hierarchical structures (e.g. JSON)
+\item Complex Features (e.g. valid email addresses)
+\item Counting (e.g. find same numbers of two characters, which is impossible in regex)
+\item Complex properties (e.g. palindromes, balanced parentheses, which are impossible in regex)
+\end{itemize}
+
+All in all, regex is still decent at wrangling text data.
+\end{notebox}
+
+\subsection{Restaurant Data Demo}
+
 
