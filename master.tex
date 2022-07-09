@@ -7,7 +7,7 @@
 \usepackage[mode=buildnew]{standalone}
 \graphicspath{{figures/}}
 \usepackage[lecture]{random}
-
+\renewcommand{\thefigure}{\arabic{section}.\arabic{figure}}
 \pagestyle{fancy}
 \fancyhf{}
 \rhead{\textsc{Evelyn Koo}}
@@ -29,11 +29,13 @@ Notes are taken from the slides of the Spring 2022 edition of Data 100.
 
 Some of the figures may be messy or poorly drawn as this is my first time seriously learning TikZ.
 
-\input{1-overview.tex}
-\input{2-sampling.tex}
-\input{3-pandas1.tex}
-\input{4-pandas2.tex}
+% \input{1-overview.tex}
+% \input{2-sampling.tex}
+% \input{3-pandas1.tex}
+% \input{4-pandas2.tex}
 \input{5-eda.tex}
 \input{6-regex.tex}
+\input{7-vis1.tex}
+\input{8-vis2.tex}
 
 \end{document}

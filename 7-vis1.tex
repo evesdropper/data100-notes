@@ -1,0 +1,333 @@
+\lecture[2022-07-03]{Visualization I: Visualizing Relationships between Quantitative Variables}
+
+\subsection{Overview}
+Previously, in Data 8 and 100, visualizations were simple histograms, bar charts, and scatter plots. In the real world, visualizations can be a lot more complex, but they share teh same goals as the basic graphs we previously made:
+\begin{enumerate}
+\item To help your understanding of data/results.
+\begin{itemize}
+\item Key part of EDA and useful throughout modeling.
+\item Lightweight, iterative, and flexible.
+\end{itemize}
+\item To communicate results/conclusions to others.
+\begin{itemize}
+\item Highly editorial and selective; be thoughtful and careful!
+\item Fine tuned to achieve a communications goal.
+\item Time consuming; bridges into design/art.
+\end{itemize}
+\end{enumerate}
+
+\subsection{Distributions}
+Main focus is towards visualizations of distributions.
+\begin{definition}[Distribution]{A distribution describes the frequency at which values of a variable occur.
+\begin{itemize}
+\item All values must be accounted for once and only once.
+\item Total frequencies must add up to 100\%, or the number of values that have been observed.
+\end{itemize}
+}
+\end{definition}
+
+\begin{example}[]{Do the following charts show a distribution?
+
+\begin{minipage}{0.3\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{7-dis1.png}
+\end{center}    
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{7-dis2.png}
+\end{center}    
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{7-dis3.png}
+\end{center}
+\end{minipage}
+\tcbline 
+\begin{enumerate}
+\item No - one can belong in multiple categories, and it doesn't add up to 1. It just shows changes in each category.
+\item No - again, one can belong in multiple categories, and it doesn't add up to 1.
+\item Yes - it adds up to 1, and no one can be in multiple categories (it doesn't make sense for someone to be in both middle and upper class).
+\end{enumerate}
+}
+\end{example}
+
+\subsubsection{Bar Plots for Distributions}
+Bar plots are the most common way of displaying the distribution of a qualitative variable (e.g. the previous example - percent of adults in each income class). Lengths encode the values, while there could be subcategories denoted by colors (not necessary), and widths do not encode anything.
+
+Here are a few examples of bar charts using the baby weights dataset from Data 8. We made a bar chart based on the ``Maternal Smoker'' series, which can be denoted as True or False.
+
+\textbf{Data 8 Tables}
+
+\begin{figure}[ht]
+\includegraphics[width=0.65\textwidth]{7-bar1.png}\centering\caption{Data 8 built-in charts from \mintinline{text}{datascience} library. Chose horizontal bar as it doesn't look as good with vertical bars.}
+\end{figure}
+\begin{minted}{python}
+from datascience import Table
+t = Table.from_df(births["Maternal Smoker"].value_counts().reset_index())
+t.barh("index", "Maternal Smoker")
+\end{minted}
+
+\textbf{Pandas Native}
+
+\begin{figure}[ht]
+\includegraphics[width=0.65\textwidth]{7-bar2.png}\centering\caption{Pandas has built-in plotting, but we don't use it officially in Data 100.}
+\end{figure}
+\begin{minted}{python}
+births["Maternal Smoker"].value_counts().plot(kind="bar")
+\end{minted}
+
+\textbf{Matplotlib Manual}
+
+\begin{figure}[ht]
+\includegraphics[width=0.65\textwidth]{7-bar3.png}\centering\caption{Directly use \mintinline{text}{matplotlib} is an option, but we don't do this often in Data 100.}
+\end{figure}
+\begin{minted}{python}
+ms = births["Maternal Smoker"].value_counts()
+plt.bar(ms.index, ms)
+\end{minted}
+
+\textbf{Seaborn}
+
+\begin{figure}[ht]
+\includegraphics[width=0.65\textwidth]{7-bar4.png}\centering\caption{Seaborn's \mintinline{text}{countplot} function does more abstraction; instead of already selecting out the data you want to check, it does the counting for you. Preferred approach in Data 100.}
+\end{figure}
+\begin{minted}{python}
+import seaborn as sns
+sns.countplot(data=births, x="Maternal Smoker")
+\end{minted}
+
+\textbf{Plotly}
+
+\begin{figure}[ht]
+\includegraphics[width=0.65\textwidth]{7-bar5.png}\centering\caption{Not used in Data 100, but could also be useful. Plots are interactive in plotly.}
+\end{figure}
+\begin{minted}{python}
+import plotly.express as px
+px.histogram(births, x = 'Maternal Smoker', color = 'Maternal Smoker')
+\end{minted}
+
+In short, there are many ways to generate the same plot. The first 4 are \mintinline{text}{matplotlib} based (Data 8's \mintinline{text}{Table.bar}, Pandas' \mintinline{text}{Series.bar}, Matplotlib \mintinline{text}{plt.bar}, and Seaborn \mintinline{text}{sns.countplot}). The preferred appraoch is Seaborn's \mintinline{text}{countplot} - it's simpler and provides better aesthetics. The fifth method is using \mintinline{text}{plotly}'s \mintinline{text}{px.histplot}, which is even better than Seaborn - providing a cleaner API, interactive plots, and even better aesthetics. (However, it is not taught in Data 100)
+
+\textbf{Questions about our Bar Plot}
+
+Some observations:
+\begin{itemize}
+\item Colors chosen (blue/red) are arbitrary and do not convey any more inforamtion than the existence of different categories.
+\item Widths of the bars encode no useful information and are given arbitrary widths to look nice.
+\end{itemize}
+These prompt some questions:
+\begin{itemize}
+\item What colors should we use?
+\item How wide should the bars be?
+\item Should the legend exist?
+\item Should the bars and axes have dark borders?
+\end{itemize}
+How do we decide on these questions? To answer these questions, let's go back to the goals of data visualization: to help our understanding of results and convery said results/conclusions to others. From there, we have our answers: for goal 1, these choices are mostly irrelevant, but for goal 2, they matter.
+\begin{itemize}
+\item Color choice matters when we share these results with others - some colors are more associated with negative choices (e.g. red), and could convey the meaning that smoking is bad. A better idea would be to have colors on the same gradient to stay neutral.
+\item A legend should exist, especially if it contains numbers, allowing casual readers to notice.
+\item A few other notes: replace True/False with Smoker/Nonsmoker; specify exact count on bar chart - don't just rely on interactivity; add an annotation to cite the data source.
+\end{itemize}
+
+\subsection{Histograms}
+Another type of plot is to use the histogram to show the distribution. Suppose we wanted to plot the distribution of Maternal Pregnancy Weight as a bar plot, using each weight value as a category.
+
+\textbf{Countplot}
+\begin{figure}[ht]
+\includegraphics[width=0.65\textwidth]{7-hist1.png}\centering\caption{Use each observed integer as a category. What's wrong here?}
+\end{figure}
+\begin{minted}{python}
+sns.countplot(data=births, x="Maternal Pregnancy Weight")
+\end{minted}
+
+\textbf{Histplot}
+\begin{figure}[ht]
+\includegraphics[width=0.65\textwidth]{7-hist2.png}\centering\caption{Using integer bins as categories.}
+\end{figure}
+\begin{minted}{python}
+sns.histplot(data=births, x="Maternal Pregnancy Weight")
+\end{minted}
+
+\textbf{Plotly Approach}
+\begin{figure}[ht]
+    \includegraphics[width=0.65\textwidth]{7-hist3.png}\centering\caption{Plotly provides interactivity, allowing you to see bins and count per bin.}
+\end{figure}
+\begin{minted}{python}
+px.histogram(births, x="Maternal Pregnancy Weight")
+\end{minted}
+
+\textbf{Rugplots}
+\begin{figure}[ht]
+\includegraphics[width=0.65\textwidth]{7-rug.png}\centering\caption{Adding a rugplot to the histogram allows us to see the distribution of data points within each bin. Not useful here, but can be useful in some contexts.}
+\end{figure}
+\begin{minted}{python}
+sns.histplot(data = births, x = 'Maternal Pregnancy Weight')
+sns.rugplot(data = births, x = 'Maternal Pregnancy Weight', color = "red")
+\end{minted}
+
+\subsubsection{Evaluating Histograms}
+Histograms allow us to analyze the distribution of data by their shape:
+\begin{itemize}
+\item \textbf{Skewness/Tails}: Skewed left/right, left/right tail.
+\item \textbf{Outliers:} Determined arbitrarily.
+\item \textbf{Modes}
+\end{itemize}
+
+Consider this plot:
+\begin{figure}[ht]
+\includegraphics[width=0.65\textwidth]{7-denscurve.png}\centering\caption{Histogram with density curve (continuous histogram).}
+\end{figure}
+
+\textbf{Skewness/Tails}
+\begin{itemize}
+\item If a distribution has a long right tail (like this one), it is skewed right, meaning the mean is typically to the right of the median.
+\begin{itemize}
+\item Think of the mean as the ``balancing point'' of the density and distribution.
+\end{itemize}
+\item Vice versa, if the tail is on the left, then it is skewed left.
+\item The distribution can also be symmetric, where both tails are roughly equal size.
+\end{itemize}
+
+\textbf{Outliers}
+\begin{itemize}
+\item There are some outliers in the far right.
+\item But in general, what constitutes an outlier? Just the largest point or the rightmost 4 bins?
+\item Will define more carefully when covering box plots.
+\end{itemize}
+
+\textbf{Modes}
+\begin{definition}[Mode]{Local/global maximum in a distribution. If there is one maximum, it is unimodal, then bimodal if there are two maximums, and multimodals if there are more than two. 
+}
+\end{definition}
+\begin{itemize}
+\item The graph looks like it could be bimodal, but how can we know for sure?
+\item Sometimes the bin sizes and the presence of random noise can make it difficult to find the modes.
+\begin{itemize}
+\item Use a continuous distribution (density curve) instead of a discrete histogram. Then it becomes apparent that there is one mode.
+\end{itemize}
+\end{itemize}
+\begin{figure}[ht]
+\centering
+\begin{minipage}{0.5\textwidth}
+\centering
+\includegraphics[width=\textwidth]{7-dens1.png}
+\end{minipage}%
+\begin{minipage}{0.5\textwidth}
+\centering
+\includegraphics[width=\textwidth]{7-dens2.png}
+\end{minipage}
+\centering\caption{If we split the histogram into smokers/nonsmokers, we can see the smoker graph is slightly bimodal, while the nonsmoker one is unimodal. This difference might be worth some more analysis.}
+\end{figure}
+
+\begin{notebox}[]
+instead of labeling by counts, we can instead plot the density:
+\begin{center}
+\includegraphics[width=0.5\textwidth]{7-dens3.png}
+\end{center}
+To get density from counts and bin size:
+\[
+\text{Density} = \frac{\text{Count} / \text{Total}}{\text{Bin Size}}
+.\] 
+Vice versa, to get counts from density and bin size:
+\[
+    \text{Count} = \text{Bin Size} \cdot \text{Density} \cdot \text{Total Entries}
+.\] 
+\end{notebox}
+
+\subsection{Box/Violin Plots}
+\begin{definition}[Quartile]{A quarter of the distribution for a quantitative variable.
+\begin{itemize}
+\item First Quartile: 25th percentile.
+\item Second Quartile: 50th percentile (median).
+\item Third Quartile: 75th percentile.
+\end{itemize}
+}
+\end{definition}
+\begin{definition}[Interquartile Range]{Measures spread, middle 50\% of the data.
+\[
+\text{IQR} = \text{Third Quartile} - \text{First Quartile}
+.\]
+}
+\end{definition}
+Box plots are used to show the characteristics of a numerical distribution. It shows the quartiles, ``Whiskers'' at $\{\text{First Quartile} - 1.5 \text{ IQR}, \text{Third Quartile} + 1.5 \text{ IQR}\}$, Outliers (arbitrarily defined as being to the extreme of the ``whiskers'').
+
+With box plots, it becomes easier to compare multiple distributions, but we lose a lot of information. We can prevent this with a violin plot, which is similar to a box plot but also shows the smoothened density curve, giving the box meaning.
+
+\begin{figure}[ht]
+\begin{minipage}{0.5\textwidth}
+\centering 
+\includegraphics[width=0.5\textwidth]{7-box.png}
+\end{minipage}%
+\begin{minipage}{0.5\textwidth}
+\centering
+\includegraphics[width=0.5\textwidth]{7-vio.png}
+\end{minipage}
+\centering\caption{Box plot/Violin plot for the same distribution (birth weight).}
+\end{figure}
+\begin{minted}{python}
+sns.boxplot(y="Birth Weight", data=births)
+\end{minted}
+
+\subsection{Comparing Quantitative Distributions}
+How do we compare multiple distributions? One possible option is to overlay histograms and/or density curves of two distributions.
+\begin{figure}[ht]
+\begin{minipage}{0.33\textwidth}
+\centering
+\includegraphics[width=\textwidth]{7-comp1.png}
+\end{minipage}%
+\begin{minipage}{0.33\textwidth}
+\centering
+\includegraphics[width=\textwidth]{7-comp1.png}
+\end{minipage}%
+\begin{minipage}{0.33\textwidth}
+\centering
+\includegraphics[width=\textwidth]{7-comp3.png}
+\end{minipage}
+\centering\caption{Overlaying histograms and/or density curves.}
+\end{figure}
+\begin{minted}{python}
+# First approach 
+sns.distplot(nsm_bweights, bins=bw_bins, kde=False, hist_kws=dict(ec='w'), label='non smoker')
+sns.distplot(sm_bweights, bins=bw_bins, kde=False, hist_kws=dict(ec='w'), label='smoker')
+# Second approach
+sns.distplot(nsm_bweights, bins=bw_bins, hist_kws=dict(ec='w'), label='non smoker')
+sns.distplot(sm_bweights, bins=bw_bins, hist_kws=dict(ec='w'), label='smoker')
+# Third approach
+sns.distplot(nsm_bweights, hist=False, label='non smoker')
+sns.distplot(sm_bweights, hist=False), label='smoker')
+\end{minted}
+
+Instead of using histograms, which do not generalize as well, we can use side-by-side box and violin plots. Since they are more concise, it is easier to compare the distributions with such plots.
+\begin{itemize}
+\item We can easily tell that median birth weight for non smokers was higher.
+\item Using the violin plot, we can see that the smoker category (True) is bimodal.
+\end{itemize}
+
+\begin{figure}[ht]
+\begin{minipage}{0.5\textwidth}
+    \centering
+\includegraphics[width=0.5\textwidth]{7-bcomp.png}
+\end{minipage}%
+\begin{minipage}{0.5\textwidth}
+    \centering
+\includegraphics[width=0.5\textwidth]{7-vcomp.png}
+\end{minipage}
+\centering
+\caption{Side by side box/violin plots.}
+\end{figure}
+\begin{minted}{python}
+sns.boxplot(data=births, x='Maternal Smoker', y='Birth Weight')
+sns.violinplot(data=births, x='Maternal Smoker', y='Birth Weight')
+\end{minted}
+
+\subsection{Relationships between Quantitative Variables}
+Currently, only discussed visualizations for distributions of variables, but we can also use visualizations to show if there is a relationship between two variables.
+
+Some example relationships:
+\begin{center}
+\includegraphics[width=0.5\textwidth]{7-rel.png}
+\end{center}
+Note that the bottom left one is linear spreading as it is linear for the most part, but spreads as x increases. 
+
+The relationship between the data allows us to decide which type of model to build - e.g. the first two we can use linear regression, while other techniques are used for nonlinear relationships.
